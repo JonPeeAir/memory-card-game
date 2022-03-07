@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import "./App.css";
 
 import GithubLogo from "./assets/github-logo.svg";
@@ -5,6 +6,26 @@ import GameTitle from "./assets/memory-rick.png";
 import Cards from "./components/Cards";
 
 const App = () => {
+    // eslint-disable-next-line no-unused-vars
+    const [score, setScore] = useState(0);
+    // eslint-disable-next-line no-unused-vars
+    const [best, setBest] = useState(0);
+    // eslint-disable-next-line no-unused-vars
+    const [seenCardIds, setSeenCardIds] = useState([]);
+
+    function handleCardClick(cardId) {
+        if (seenCardIds.includes(cardId)) {
+            console.log("GAME OVER");
+        } else {
+            setSeenCardIds(seenCardIds.concat(cardId));
+            setScore(prevScore => prevScore + 1);
+        }
+    }
+
+    useEffect(() => {
+        console.log({ seenCardIds });
+    }, [seenCardIds]);
+
     return (
         <div className="min-h-screen flex flex-col gap-5 justify-center items-center">
             <div className="mt-10 md:mt-7 lg:mt-5 flex flex-col justify-center items-center gap-2">
@@ -21,11 +42,15 @@ const App = () => {
 
             <div>
                 <p className="text-center text-2xl lg:text-3xl text-gray-200 font-handwriting">
-                    Score: 0 Best: 0
+                    Score: {score} - Best: {best}
                 </p>
             </div>
 
-            <Cards level={1} />
+            <Cards
+                level={1}
+                seenCardIds={seenCardIds}
+                cardClickHandler={handleCardClick}
+            />
 
             <div className="-mt-5 p-2 md:p-3 2xl:p-5 text-white font-handwriting text-base xl:text-xl 2xl:text-2xl flex justify-center items-center">
                 <p>
