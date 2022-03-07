@@ -2,12 +2,12 @@ import "./App.css";
 
 import GithubLogo from "./assets/github-logo.svg";
 import GameTitle from "./assets/memory-rick.png";
-import tempImg from "./assets/temp.png";
+import Cards from "./components/Cards";
 
 const App = () => {
     return (
-        <div className="pt-10 md:pt-7 lg:pt-5 h-screen flex flex-col gap-5 justify-center items-center">
-            <div className="flex flex-col justify-center items-center gap-2">
+        <div className="min-h-screen flex flex-col gap-5 justify-center items-center">
+            <div className="mt-10 md:mt-7 lg:mt-5 flex flex-col justify-center items-center gap-2">
                 <img
                     src={GameTitle}
                     alt="Memory Rick!"
@@ -25,45 +25,7 @@ const App = () => {
                 </p>
             </div>
 
-            <div className="p-5 container flex-1 flex flex-col items-center border-4 rounded-sm bg-green-500/75 border-lime-500 shadow-green-900 shadow-[inset_0_0_80px_80px]">
-                <p className="pb-6 text-4xl font-handwriting text-gray-200">
-                    Level 1
-                </p>
-                <div className="flex flex-wrap gap-5 justify-center items-center h-fit">
-                    <div className="w-[140px] md:w-[180px] 2xl:w-[220px] h-[175px] md:h-[225px] 2xl:h-[275px] bg-lime-700/25 border-lime-500 border-4 grid place-items-center gap-2">
-                        <img
-                            src={tempImg}
-                            alt="temp"
-                            className="w-[80%] border-lime-500 border-2 self-end"
-                        />
-                        <p className="bg-lime-600 w-[90%] font-handwriting md:text-lg 2xl:text-xl text-center text-gray-200 self-start">
-                            Morty Smith
-                        </p>
-                    </div>
-
-                    <div className="w-[140px] md:w-[180px] 2xl:w-[220px] h-[175px] md:h-[225px] 2xl:h-[275px] bg-lime-700/25 border-lime-500 border-4 grid place-items-center gap-2">
-                        <img
-                            src={tempImg}
-                            alt="temp"
-                            className="w-[80%] border-lime-500 border-2 self-end"
-                        />
-                        <p className="bg-lime-600 w-[90%] font-handwriting md:text-lg 2xl:text-xl text-center text-gray-200 self-start">
-                            Morty Smith
-                        </p>
-                    </div>
-
-                    <div className="w-[140px] md:w-[180px] 2xl:w-[220px] h-[175px] md:h-[225px] 2xl:h-[275px] bg-lime-700/25 border-lime-500 border-4 grid place-items-center gap-2">
-                        <img
-                            src={tempImg}
-                            alt="temp"
-                            className="w-[80%] border-lime-500 border-2 self-end"
-                        />
-                        <p className="bg-lime-600 w-[90%] font-handwriting md:text-lg 2xl:text-xl text-center text-gray-200 self-start">
-                            Morty Smith
-                        </p>
-                    </div>
-                </div>
-            </div>
+            <Cards level={1} />
 
             <div className="-mt-5 p-2 md:p-3 2xl:p-5 text-white font-handwriting text-base xl:text-xl 2xl:text-2xl flex justify-center items-center">
                 <p>
