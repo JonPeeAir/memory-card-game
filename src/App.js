@@ -1,83 +1,104 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 
 import GithubLogo from "./assets/github-logo.svg";
 import GameTitle from "./assets/memory-rick.png";
 import Cards from "./components/Cards";
+import GameoverScreen from "./components/GameoverScreen";
+
+function arraysAreEqual(array1, array2) {
+    return array1.sort().toString() === array2.sort().toString();
+}
 
 const App = () => {
-    // eslint-disable-next-line no-unused-vars
     const [score, setScore] = useState(0);
-    // eslint-disable-next-line no-unused-vars
     const [best, setBest] = useState(0);
-    // eslint-disable-next-line no-unused-vars
     const [seenCardIds, setSeenCardIds] = useState([]);
+    const [level, setLevel] = useState(1);
+    const [gameover, setGameover] = useState(false);
 
-    function handleCardClick(cardId) {
+    function handleCardClick(cardId, IdList) {
         if (seenCardIds.includes(cardId)) {
-            console.log("GAME OVER");
+            if (score > best) setBest(score);
+            setGameover(true);
         } else {
+            const seenCardsCopy = JSON.parse(JSON.stringify(seenCardIds));
+            seenCardsCopy.push(cardId);
+
+            // TODO: change cards level if seenCardsCopy and IdList are equal
+            if (arraysAreEqual(seenCardsCopy, IdList)) {
+                setLevel(prev => prev + 1);
+            }
+
             setSeenCardIds(seenCardIds.concat(cardId));
             setScore(prevScore => prevScore + 1);
         }
     }
 
-    useEffect(() => {
-        console.log({ seenCardIds });
-    }, [seenCardIds]);
+    function resetGame() {
+        setScore(0);
+        setSeenCardIds([]);
+        setLevel(1);
+        setGameover(false);
+    }
 
     return (
-        <div className="min-h-screen flex flex-col gap-5 justify-center items-center">
-            <div className="mt-10 md:mt-7 lg:mt-5 flex flex-col justify-center items-center gap-2">
-                <img
-                    src={GameTitle}
-                    alt="Memory Rick!"
-                    className="w-[90%] sm:w-[80%] md:w-[65%] lg:w-[50%] 2xl:w-[40%]"
+        <>
+            {gameover && <GameoverScreen onClick={resetGame} />}
+
+            <div className="min-h-screen flex flex-col gap-5 justify-center items-center">
+                <div className="mt-10 md:mt-7 lg:mt-5 flex flex-col justify-center items-center gap-2">
+                    <img
+                        src={GameTitle}
+                        alt="Memory Rick!"
+                        className="w-[90%] sm:w-[80%] md:w-[65%] lg:w-[50%] 2xl:w-[40%]"
+                    />
+
+                    <p className="text-base sm:text-lg md:text-xl 2xl:text-2xl text-gray-200 font-handwriting">
+                        A Rick and Morty Memory Card Game
+                    </p>
+                </div>
+
+                <div>
+                    <p className="text-center text-2xl lg:text-3xl text-gray-200 font-handwriting">
+                        Score: {score} - Best: {best}
+                    </p>
+                </div>
+
+                <Cards
+                    level={level}
+                    seenCardIds={seenCardIds}
+                    gameover={gameover}
+                    cardClickHandler={handleCardClick}
                 />
 
-                <p className="text-base sm:text-lg md:text-xl 2xl:text-2xl text-gray-200 font-handwriting">
-                    A Rick and Morty Memory Card Game
-                </p>
-            </div>
+                <div className="-mt-5 p-2 md:p-3 2xl:p-5 text-white font-handwriting text-base xl:text-xl 2xl:text-2xl flex justify-center items-center">
+                    <p>
+                        JNPR @{" "}
+                        <a
+                            href="https://www.theodinproject.com/paths/full-stack-javascript/courses/javascript/lessons/memory-card"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            TheOdinProject
+                        </a>
+                    </p>
 
-            <div>
-                <p className="text-center text-2xl lg:text-3xl text-gray-200 font-handwriting">
-                    Score: {score} - Best: {best}
-                </p>
-            </div>
-
-            <Cards
-                level={1}
-                seenCardIds={seenCardIds}
-                cardClickHandler={handleCardClick}
-            />
-
-            <div className="-mt-5 p-2 md:p-3 2xl:p-5 text-white font-handwriting text-base xl:text-xl 2xl:text-2xl flex justify-center items-center">
-                <p>
-                    JNPR @{" "}
                     <a
-                        href="https://www.theodinproject.com/paths/full-stack-javascript/courses/javascript/lessons/memory-card"
+                        href="https://github.com/JonPeeAir/memory-card-game"
                         target="_blank"
-                        rel="noreferrer"
+                        rel="noopener noreferrer"
+                        className="absolute right-3"
                     >
-                        TheOdinProject
+                        <img
+                            src={GithubLogo}
+                            alt="Github Logo"
+                            className="xl:w-[25px] 2xl:w-[30px]"
+                        />
                     </a>
-                </p>
-
-                <a
-                    href="https://github.com/JonPeeAir/memory-card-game"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="absolute right-3"
-                >
-                    <img
-                        src={GithubLogo}
-                        alt="Github Logo"
-                        className="xl:w-[25px] 2xl:w-[30px]"
-                    />
-                </a>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

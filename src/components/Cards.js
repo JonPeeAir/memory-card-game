@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 const ids = [];
 
 function getRandomId(maxId) {
+    // console.log(ids);
     let randID = randFrom(1, maxId);
+    // let randID = 3;
 
     let idAlreadyInList = ids.some(id => id === randID);
 
@@ -43,12 +45,13 @@ const Cards = props => {
         });
     }
 
+    // On Mount and Level Change
     useEffect(() => {
-        console.log(characters);
-    }, [characters]);
+        // This ensures that we get new cards on game reset
+        if (props.gameover) return;
 
-    // On Mount
-    useEffect(() => {
+        setCharacters([]);
+
         // Get total number of characters available in API
         fetch("https://rickandmortyapi.com/api/character")
             .then(response => response.json())
@@ -68,29 +71,34 @@ const Cards = props => {
                             setCharacters(prev => prev.concat(character));
                             i++;
 
-                            if (i < props.level * 2) {
+                            if (i < props.level + 2) {
                                 fetchLoop();
                             }
                         });
                 }
                 fetchLoop();
             });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [props.level, props.gameover]);
+
+    // This effect only happens on game reset
+    useEffect(() => {
+        // reset ids length when seen cards have also been reset
+        if (props.seenCardIds.length === 0) ids.length = 0;
+    }, [props.seenCardIds]);
 
     return (
-        <div className="p-5 container flex-1 flex flex-col items-center border-4 2xl:border-8 rounded-md bg-green-500/75 border-lime-500 shadow-green-900 shadow-[inset_0_0_80px_80px]">
+        <div className="p-2 sm:p-5 container flex-1 flex flex-col items-center border-4 2xl:border-8 rounded-md bg-green-500/75 border-lime-500 shadow-green-900 shadow-[inset_0_0_80px_80px]">
             <p className="pb-6 text-4xl font-handwriting text-gray-200">
                 Level {props.level}
             </p>
-            <div className="flex flex-wrap gap-5 justify-center items-center h-fit">
+            <div className="flex flex-wrap gap-3 sm:gap-5 justify-center items-center h-fit">
                 {characters.map(character => (
                     <Card
                         img={character.image}
                         name={character.name}
                         key={character.id}
                         onClick={() => {
-                            props.cardClickHandler(character.id);
+                            props.cardClickHandler(character.id, ids);
                             shuffleCharacters();
                         }}
                     />
